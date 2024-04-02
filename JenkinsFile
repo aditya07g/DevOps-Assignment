@@ -1,0 +1,49 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/aditya07g/DevOps-Assignment.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Run linting and build commands
+                script {
+                    def lintResult = sh(script: 'npm run lint', returnStatus: true)
+                    if (lintResult != 0) {
+                        error 'Linting failed! Please fix linting errors before proceeding.'
+                    }
+
+                    // Proceed with build if linting passes
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Testing') {
+            steps {
+                sh 'npm run test'
+            }
+        }
+
+        stage('Deployment') {
+            steps {
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
+
+    post {
+        always {
+            echo 'Performing cleanup...'
+            sh 'docker system prune -af'
+        }
+    }
+}
