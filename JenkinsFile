@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        docker {
+            image 'wordpress:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/aditya07g/DevOps-Assignment.git'
+            }
+        }
+
+        stage('Linting') {
+            steps {
+            def lintResult = sh 'phpcs --standard=WordPress --extensions=php .'
+            if (lintResult != 0) {
+                        error 'Linting failed! Please fix linting errors before proceeding.'
+                    }
+            }
+        }
+
+        stage('Deployment') {
+            steps {
+                sh 'kubectl apply -f wordpress-deployment.yaml'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Performing cleanup...'
+            sh 'docker system prune -af'
+        }
+    }
+}
