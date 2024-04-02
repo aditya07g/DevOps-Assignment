@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="MyProject">
+    <description>My Project Coding Standard</description>
+    <arg name="extensions" value="php"/>
+    <arg name="tab-width" value="4"/>
+    <arg name="encoding" value="utf-8"/>
+    <file>./path/to/your/php/files</file>
+    <rule ref="PSR2"/>
+    <!-- Additional rules can be added here -->
+</ruleset>
