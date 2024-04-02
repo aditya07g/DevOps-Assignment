@@ -1,5 +1,4 @@
 FROM wordpress:latest
 
 LABEL maintainer="adityag070720@gmail.com"
-COPY my-plugin /var/www/html/wp-content/plugins/my-plugin
 EXPOSE 80
