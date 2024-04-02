@@ -1,0 +1,11 @@
+linters-settings:
+  enable:
+    - deadcode
+    - gofmt
+    - goimports
+    - misspell
+    - unconvert
+    # Add more linters as needed
+
+run:
+  timeout: 5m
